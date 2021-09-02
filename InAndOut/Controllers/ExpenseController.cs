@@ -44,5 +44,72 @@ namespace InAndOut.Controllers
             return View(obj);
 
         }
+
+        public IActionResult Delete(int? Id)
+        {
+            if (Id == null || Id == 0)
+            {
+                return NotFound();
+            }
+
+            var obj = _db.Expenses.Find(Id);
+
+            if (obj == null)
+            {
+                return NotFound();
+            }
+
+            return View(obj);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Delete(Expense expense /*int? Id*/)
+        {
+            var obj = _db.Expenses.Find(expense.Id);
+
+            if (obj == null)
+            {
+                return NotFound();
+            }
+
+            _db.Expenses.Remove(obj);
+            _db.SaveChanges();
+
+            return RedirectToAction("Index");
+        }
+
+        public IActionResult Update(int? Id)
+        {
+            if (Id == null || Id == 0)
+            {
+                return NotFound();
+            }
+
+            var obj = _db.Expenses.Find(Id);
+
+            if (obj == null)
+            {
+                return NotFound();
+            }
+
+            return View(obj);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Update(Expense obj)
+        {
+            if (ModelState.IsValid)
+            {
+                _db.Expenses.Update(obj);
+                _db.SaveChanges();
+
+                return RedirectToAction("Index");
+            }
+
+            return View(obj);
+
+        }
     }
 }
