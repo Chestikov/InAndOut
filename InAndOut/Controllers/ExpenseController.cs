@@ -23,6 +23,11 @@ namespace InAndOut.Controllers
         {
             IEnumerable<Expense> objList = _db.Expenses;
 
+            foreach (var obj in objList)
+            {
+                obj.ExpenseType = _db.ExpenseTypes.FirstOrDefault(x => x.Id == obj.ExpenseTypeId);
+            }
+
             return View(objList);
         }
 
@@ -113,16 +118,26 @@ namespace InAndOut.Controllers
                 return NotFound();
             }
 
-            return View(obj);
+            ExpenseVM expenseVM = new ExpenseVM()
+            {
+                Expense = obj,
+                ExpenseTypes = _db.ExpenseTypes.Select(x => new SelectListItem
+                {
+                    Text = x.Name,
+                    Value = x.Id.ToString()
+                })
+            };
+
+            return View(expenseVM);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Update(Expense obj)
+        public IActionResult Update(ExpenseVM obj)
         {
             if (ModelState.IsValid)
             {
-                _db.Expenses.Update(obj);
+                _db.Expenses.Update(obj.Expense);
                 _db.SaveChanges();
 
                 return RedirectToAction("Index");
