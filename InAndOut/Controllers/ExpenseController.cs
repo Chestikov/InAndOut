@@ -1,6 +1,7 @@
 ﻿using InAndOut.Data;
 using InAndOut.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,6 +27,14 @@ namespace InAndOut.Controllers
 
         public IActionResult Create()
         {
+            IEnumerable<SelectListItem> typeDropDown = _db.ExpenseTypes.Select(x => new SelectListItem
+            {
+                Text = x.Name,
+                Value = x.Id.ToString()
+            });
+
+            ViewBag.ExpenseTypes = typeDropDown;
+
             return View();
         }
 

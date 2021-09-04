@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace InAndOut.Models
 {
@@ -16,5 +17,11 @@ namespace InAndOut.Models
         [Required]
         [Range(1, int.MaxValue, ErrorMessage = "Amount must be greater than 0.")]
         public int Amount { get; set; }
+
+        public int ExpenseTypeId { get; set; }
+
+        [ForeignKey("ExpenseTypeId")]
+        [DisplayName("Type")]
+        public virtual ExpenseType ExpenseType { get; set; }
     }
 }
